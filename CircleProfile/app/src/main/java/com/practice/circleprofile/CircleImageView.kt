@@ -1,49 +1,50 @@
 package com.practice.circleprofile
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Path
-import android.graphics.RectF
+import android.graphics.*
 import android.util.AttributeSet
+import kotlin.math.min
 
 private const val TAG = "CircleImageView"
 
 
 class CircleImageView : androidx.appcompat.widget.AppCompatImageView {
+
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(
         context,
         attrs
-    ) // LayoutInflater에 사용되는 생성자
+    ) {
+        init()
+    }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
         defStyleAttr
-    )
+    ) {
+        init()
+    }
 
-    private var radius = 200.0f // 값이 클수록 더욱 둥글게 됩니다.
+    private var radius = 0.0f
 
-    fun setRadius(radius: Float) {
-        this.radius = radius
+    private fun init() {
+        setScaleType()
+    }
+
+    private fun setScaleType() {
+        super.setScaleType(ScaleType.CENTER_CROP)
     }
 
     override fun onDraw(canvas: Canvas?) {
-
         val path = Path()
 
         val rect = RectF(0f, 0f, this.width.toFloat(), this.height.toFloat())
-
-        /*clipPath.addCircle(
-            this.width.toFloat() / 2,
-            this.height.toFloat() / 2,
-            50f,
-            Path.Direction.CW
-        )*/
+        radius = min(this.width.toFloat() / 2.0f, this.height.toFloat() / 2.0f)
         path.addRoundRect(rect, radius, radius, Path.Direction.CW)
-
         canvas!!.clipPath(path)
         super.onDraw(canvas)
+
     }
 
 }
